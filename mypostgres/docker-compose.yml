@@ -1,0 +1,18 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: my_postgres_container
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: dist_user
+      POSTGRES_PASSWORD: dist_pass_123
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+    command: postgres -c listen_addresses=*
+
+networks:
+  my_network:
+    driver: bridge
