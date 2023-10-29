@@ -1,0 +1,29 @@
+version: '3.8'
+
+services: 
+  db:
+    image: postgres:latest
+    restart: always 
+    environment:
+      POSTGRES_USER: dist_user
+      POSTGRES_PASSWORD: dist_pass_123
+      POSTGRES_DB: mydb
+    ports:
+      - "6060:5432"
+    networks:
+      - app_net 
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c 'shared_preload_libraries=pg_stat_statements' 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dist_user"] 
+      interval: 10s
+      timeout: 5s 
+      retries: 5
+
+networks: 
+  app_net:
+
+volumes:
+  postgres_data:
